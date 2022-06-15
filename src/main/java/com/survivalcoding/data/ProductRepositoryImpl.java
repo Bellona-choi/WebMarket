@@ -8,17 +8,25 @@ import com.survivalcoding.domain.repository.ProductRepository;
 // 다형성
 public class ProductRepositoryImpl implements ProductRepository {
     private List<Product> products = new ArrayList<>();
-    //싱글턴 패턴
-    //1. static 인스턴스 준비
-    //2. static 메서드로 인스턴스 리턴 (getInstance() 이름을 주로 씀)
-    //3. 생성자 막기 private
+    
+    // 싱글턴 패턴
+    // 1. static 인스턴스 준비
+    // 2. static 메서드로 인스턴스 리턴 (getInstance() 이름을 주로 씀)
+    // 3. 생성자 막기 (private)
     private static ProductRepositoryImpl instance = new ProductRepositoryImpl();
     
     public static ProductRepositoryImpl getInstance() {
-       return instance;
+        return instance;
     }
-    
+
     private ProductRepositoryImpl() {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         Product phone = new Product("P1234", "iPhone 6s", 800000);
         phone.setDescription("4.7-inch, 1334x750 Retina HD display");
         phone.setCategory("Smart Phone");
@@ -45,10 +53,12 @@ public class ProductRepositoryImpl implements ProductRepository {
         products.add(tablet);
     }
 
+    @Override
     public List<Product> getAllProducts() {
         return products;
     }
 
+    @Override
     public Product getProductById(String id) {
         // p.173 참고
         // List -> Stream (데이터의 흐름)
@@ -58,8 +68,27 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .get(); // 얻어
     }
     
+    @Override
     public void addProduct(Product product) {
-       products.add(product);
+        products.add(product);
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
